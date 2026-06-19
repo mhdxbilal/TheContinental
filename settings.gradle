@@ -1,0 +1,20 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        // JitPack is the fallback for youtubedl-android in case a version isn't yet
+        // mirrored to Maven Central. If Maven Central resolves it first, JitPack is never hit.
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+rootProject.name = "TheContinental"
+include ':app'

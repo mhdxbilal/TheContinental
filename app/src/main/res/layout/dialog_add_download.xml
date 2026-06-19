@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_l">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilUrl"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:boxStrokeColor="@color/continental_gold"
+            app:hintTextColor="@color/continental_gold">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/url_dialog_hint"
+                android:inputType="textUri"
+                android:textColor="@color/continental_text_primary"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            style="@style/Continental.Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_m"
+            android:text="@string/label_quality" />
+
+        <RadioGroup
+            android:id="@+id/rgQuality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbQ2160"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/continental_gold"
+                android:textColor="@color/continental_text_primary"
+                android:text="4K (2160p)" />
+
+            <RadioButton
+                android:id="@+id/rbQ1080"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:buttonTint="@color/continental_gold"
+                android:textColor="@color/continental_text_primary"
+                android:text="Full HD (1080p)" />
+
+            <RadioButton
+                android:id="@+id/rbQ720"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/continental_gold"
+                android:textColor="@color/continental_text_primary"
+                android:text="HD (720p)" />
+
+            <RadioButton
+                android:id="@+id/rbQ480"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/continental_gold"
+                android:textColor="@color/continental_text_primary"
+                android:text="SD (480p)" />
+
+            <RadioButton
+                android:id="@+id/rbBest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/continental_gold"
+                android:textColor="@color/continental_text_primary"
+                android:text="Best available (largest file)" />
+
+            <RadioButton
+                android:id="@+id/rbAudioOnly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/continental_gold"
+                android:textColor="@color/continental_text_primary"
+                android:text="Audio only (MP3)" />
+        </RadioGroup>
+
+    </LinearLayout>
+</ScrollView>
