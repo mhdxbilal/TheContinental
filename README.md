@@ -102,19 +102,19 @@ export GRADLE_OPTS="-Xmx1g -Dorg.gradle.daemon=false"
 
 ---
 
-## Dependency versions (update if a newer stable release is available)
+## Dependency versions (verified against live sources — update if a newer stable release is available)
 
-| Dependency | Version |
-|---|---|
-| Gradle | 8.7 |
-| Android Gradle Plugin | 8.5.2 |
-| Kotlin | 1.9.24 |
-| compileSdk / targetSdk | 34 |
-| minSdk | 26 (Android 8.0) |
-| Media3 / ExoPlayer | 1.4.1 |
-| youtubedl-android | 0.18.1 |
+| Dependency | Version | Verified against |
+|---|---|---|
+| Gradle | 8.13 | AGP 8.13.2's documented minimum (developer.android.com) |
+| Android Gradle Plugin | 8.13.2 | Latest stable on the proven 8.x line (developer.android.com) |
+| Kotlin | 2.2.21 | Exact pairing shown in Android Developers' own AGP 8.13 example |
+| compileSdk / targetSdk | 35 | Safely within AGP 8.13's supported range (max API 36) |
+| minSdk | 26 (Android 8.0) | — |
+| Media3 / ExoPlayer | 1.10.0 | Current officially-recommended stable (developer.android.com) |
+| youtubedl-android | 0.18.1 | Exact version shown in the library's own current README |
 
-To update `youtubedl-android`, check https://github.com/junkfood02/youtubedl-android/releases and change the version in `app/build.gradle`.
+To update `youtubedl-android`, check https://github.com/yausername/youtubedl-android for the latest version and change the version in `app/build.gradle`. Note: AGP jumped to a 9.x major version line with breaking DSL changes in January 2026 — this project deliberately stays on the well-proven 8.x line (8.13.2 is its final, most mature release).
 
 ---
 

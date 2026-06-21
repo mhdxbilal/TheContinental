@@ -36,7 +36,7 @@
         android:largeHeap="true"
         android:extractNativeLibs="true"
         android:theme="@style/Theme.Continental"
-        tools:targetApi="34">
+        tools:targetApi="35">
 
         <activity
             android:name=".MainActivity"

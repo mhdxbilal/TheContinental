@@ -34,11 +34,9 @@ import java.util.concurrent.CopyOnWriteArraySet
  * yt-dlp on a bounded pool of background coroutines (respecting the user's "max concurrent
  * downloads" setting), and republishes the finished file through scoped-storage-safe channels.
  *
- * NOTE on the three-line block below marked "best-effort": the underlying youtubedl-android
- * API surface for a couple of flag-only CLI options and the aria2c hand-off isn't fully
- * documented, so those specific calls are the most likely spot to need a one-line tweak once
- * you build against the real library in Android Studio's autocomplete. Everything else here
- * (execute/progress/cancel/getInfo) is verified directly against the project's own README.
+ * Every youtubedl-android call here (execute/destroyProcessById, the `-x`/`--audio-format`,
+ * `--embed-subs`/`--sub-langs`, and `--downloader libaria2c.so` flags) is verified against the
+ * official README and example app at github.com/yausername/youtubedl-android.
  */
 class DownloadService : Service() {
 
@@ -129,21 +127,23 @@ class DownloadService : Service() {
             request.addOption("-f", task.quality.formatSelector)
 
             if (task.quality.isAudioOnly) {
-                // best-effort: flag-only option, no value
                 request.addOption("-x")
                 request.addOption("--audio-format", "mp3")
             } else {
                 request.addOption("--merge-output-format", "mp4")
                 if (settings.downloadEmbedSubtitles) {
-                    request.addOption("--embed-subs") // best-effort: flag-only option
+                    request.addOption("--embed-subs")
                     request.addOption("--sub-langs", "all")
                 }
             }
             if (settings.downloadUseAria2) {
-                request.addOption("--external-downloader", "libaria2c.so") // best-effort hand-off string
+                // Verified against the official youtubedl-android README: the bundled aria2c
+                // binary is wired in via "--downloader", not yt-dlp's own "--external-downloader".
+                request.addOption("--downloader", "libaria2c.so")
             }
 
-            // Verified against the project README: execute(request, callback, processId).
+            // Verified against the official youtubedl-android README and example app:
+            // execute(request, callback, processId) — callback takes (progress: Float, etaInSeconds: Long).
             YoutubeDL.getInstance().execute(request, { progress, etaInSeconds ->
                 repository.updateTask(task.id) { it.copy(progressPercent = progress, etaSeconds = etaInSeconds) }
                 updateAggregateNotification()

@@ -1,6 +1,6 @@
 name: Debug APK
 
-on:
+"on":
   push:
     branches: [ "main", "master", "dev" ]
   pull_request:
@@ -26,9 +26,19 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      # ── 3. Gradle wrapper permission ─────────────────────────────────
-      - name: Make gradlew executable
-        run: chmod +x gradlew
+      # ── 3. Normalize line endings + make gradlew executable ──────────
+      # sed strips any CRLF that could have been introduced anywhere upstream
+      # of this checkout (a phone's browser download, a zip tool, an editor,
+      # a future contributor on Windows, etc.) — this makes that entire class
+      # of failure impossible regardless of root cause.
+      - name: Normalize and prepare gradlew
+        run: |
+          sed -i 's/\r$//' gradlew
+          chmod +x gradlew
+          echo "── gradlew diagnostics ──"
+          ls -la gradlew
+          file gradlew || true
+          head -c 64 gradlew | od -c | head -5
 
       # ── 4. Gradle cache (speeds up subsequent builds significantly) ───
       - name: Cache Gradle dependencies
@@ -41,12 +51,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # ── 5. Verify dependencies resolve (catches wrong version strings before
-      #       a longer compile step fails with a confusing 404 error) ────────
-      - name: Resolve dependencies
-        run: ./gradlew dependencies --configuration releaseRuntimeClasspath --no-daemon || \
-             ./gradlew dependencies --configuration debugRuntimeClasspath --no-daemon
-        continue-on-error: true    # soft failure — the assemble step below will give the real error
+      # ── 5. Sanity check before the real build — fails fast with a clear
+      #       message instead of a confusing "No such file or directory"
+      #       three steps later if something upstream ever goes wrong. ────
+      - name: Verify project structure
+        run: |
+          test -f gradlew || { echo "::error::gradlew is missing at repo root"; exit 1; }
+          test -x gradlew || { echo "::error::gradlew is not executable"; exit 1; }
+          test -f settings.gradle || { echo "::error::settings.gradle is missing"; exit 1; }
+          test -f app/build.gradle || { echo "::error::app/build.gradle is missing"; exit 1; }
+          test -f app/src/main/AndroidManifest.xml || { echo "::error::AndroidManifest.xml is missing"; exit 1; }
+          echo "Project structure OK."
 
       # ── 6. Assemble debug APK ────────────────────────────────────────
       - name: Assemble debug APK
@@ -58,14 +73,17 @@ jobs:
       # The APK will appear in the "Artifacts" section of the workflow run
       # in the GitHub Actions UI. Click to download a zip containing the APK.
       - name: Upload debug APK
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: TheContinental-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
+          if-no-files-found: error
 
-      # ── 8. Echo download reminder ─────────────────────────────────────
+      # ── 8. Build complete reminder ─────────────────────────────────────
       - name: Build complete
+        if: success()
         run: |
           echo "✅ Debug APK built successfully."
           echo "Download it from the 'Artifacts' panel in this workflow run."

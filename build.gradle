@@ -1,7 +1,12 @@
 buildscript {
     ext {
-        agp_version = '8.5.2'
-        kotlin_version = '1.9.24'
+        // AGP 8.13.2 is the latest patch on the stable, long-proven 8.x line (AGP jumped to a
+        // 9.x major version with breaking DSL changes in Jan 2026 — deliberately staying on 8.x
+        // here since it's extensively battle-tested and this build.gradle's DSL shape is fully
+        // compatible with it). Kotlin 2.2.21 is paired here because it's the EXACT version shown
+        // in Android Developers' own official AGP 8.13 documentation example.
+        agp_version = '8.13.2'
+        kotlin_version = '2.2.21'
     }
     repositories {
         google()

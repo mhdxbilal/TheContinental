@@ -1,0 +1,20 @@
+# Force LF line endings for files that must remain Unix-style regardless of
+# the committing platform's git config (core.autocrlf, editor settings, etc).
+# This is what actually prevents "./gradlew: No such file or directory" /
+# "bad interpreter" failures on Linux CI runners.
+
+* text=auto eol=lf
+
+*.sh   text eol=lf
+gradlew text eol=lf
+
+# Windows batch files genuinely need CRLF — leave them alone.
+*.bat  text eol=crlf
+
+# Binary files — never touch, never diff as text.
+*.jar  binary
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.keystore binary
+*.jks  binary
